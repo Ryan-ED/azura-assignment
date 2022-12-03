@@ -1,0 +1,26 @@
+{
+  "name": "azura-assignment",
+  "version": "1.0.0",
+  "description": "Azura Media technical assignment",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ryan-ED/azura-assignment.git"
+  },
+  "author": "Ryan Daniels",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ryan-ED/azura-assignment/issues"
+  },
+  "homepage": "https://github.com/Ryan-ED/azura-assignment#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}

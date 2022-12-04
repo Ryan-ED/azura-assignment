@@ -1,3 +1,4 @@
+const path = require('path');
 const mysql = require('mysql');
 const express = require('express');
 const app = express();
@@ -19,47 +20,75 @@ connection.connect(error => {
     }
 
     console.log(`Connected as id: ${connection.threadId}`);
-})
+});
+
+app.set('view engine', 'hbs');
+app.set('views', path.join(__dirname, 'views'));
+app.use('/site', express.static(path.join(__dirname, 'public')));
 
 app.use((req, res, next) => {
     const startTime = Date.now();
     next();
     const delta = Date.now() - startTime;
-    console.log(`request logged for ${req.method}: ${req.url} on ${new Date()} in ${delta}ms`);
+    console.log(`request logged from IP: ${req.ip} for ${req.method}: ${req.url} on ${new Date()} in ${delta}ms`);
 });
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.json({ message: 'Hello World!' });
-});
+// app.get('/', (req, res) => {
+//     res.render('index', {
+//         title: 'Azura Assignment',
+//         pageHeader: 'Welcome to Ryan\'s assignment for Azura Media Limited'
+//     });
+// });
 
 app.get('/health', (req, res) => {
     res.json({ message: 'Server is healthy!' });
 });
 
-app.get('/vehicles', (req, res) => {
+app.get(['/', '/vehicles'], (req, res) => {
+    let vehicles = [];
     connection.query('SELECT * FROM Vehicle', function (error, results, fields) {
         if (error) {
             console.log('Error getting data', error);
+            return;
         }
-        res.json(results);
-    })
+
+        vehicles.push(...results);
+    });
+
+    res.render('index', {
+        title: 'Azura Assignment',
+        pageHeader: 'Welcome to Ryan\'s assignment for Azura Media Limited',
+        vehicles
+    });
 });
 
 app.get('/vehicles/:id', (req, res) => {
     const id = Number(req.params.id);
+    let vehicle;
     connection.query('SELECT * FROM Vehicle WHERE Id = ?', [id], function (error, results, fields) {
         if (error) {
             console.log('Error getting data', error);
+            return;
         }
-        res.json(results);
+        
+        if (results.length > 0) {
+            vehicle = results[0];
+        }
+
+        res.render('view-vehicle', {
+            title: 'Azura Assignment',
+            pageHeader: 'Viewing vehicle details',
+            vehicle
+        });
     })
 });
 
 app.post('/vehicles', (req, res) => {
     const { make, model, mileage, colour, location, value } = req.body;
-    connection.query('INSERT INTO Vehicle (Make, Model, Mileage, Colour, Location, `Value`) VALUES(?, ?, ?, ?, ?, ?)', [make, model, mileage, colour, location, value], function (error, results, fields) {
+    connection.query('INSERT INTO Vehicle (Make, Model, Mileage, Colour, Location, `Value`) VALUES(?, ?, ?, ?, ?, ?)',
+                    [make, model, mileage, colour, location, value], function (error, results, fields) {
         if (error) {
             console.log('Error getting data', error);
         }

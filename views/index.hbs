@@ -1,0 +1,7 @@
+<h1>{{pageHeader}}</h1>
+<h2>Vehicles:</h2>
+<ul>
+    {{#each vehicles}}
+        <li><a href="/vehicles/{{this.Id}}">{{this.Make}} - {{this.Model}}</a></li>
+    {{/each}}
+</ul>

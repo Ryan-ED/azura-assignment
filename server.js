@@ -120,6 +120,27 @@ app.post('/vehicles', (req, res) => {
   );
 });
 
+app.get('/api/vehicles/:id/value', (req, res) => {
+  const id = Number(req.params.id);
+  let vehicle;
+  connection.query(
+    'SELECT Value FROM Vehicle WHERE Id = ?',
+    [id],
+    (error, results) => {
+      if (error) {
+        console.log('Error getting data', error);
+        return;
+      }
+
+      if (results.length > 0) {
+        [vehicle] = results;
+      }
+
+      res.json({ vehicle });
+    },
+  );
+});
+
 app.get('*', (req, res) => {
   res.status(404).json({
     message: 'Not Found',

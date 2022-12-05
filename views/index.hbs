@@ -1,8 +1,30 @@
 <h1>{{pageHeader}}</h1>
 <h2>Vehicles:</h2>
+<input type="text" name="search" id="search" placeholder="Vehicle ID">
+<button onclick="showValue()">View</button>
+<span id="error"></span>
+<p id="value"></p>
 <ul>
     {{#each vehicles}}
         <li><a href="/vehicles/{{this.Id}}">{{this.Make}} - {{this.Model}}</a></li>
     {{/each}}
 </ul>
 <a href="/vehicles/new">Add New Vehicle</a>
+
+<script>
+    function showValue() {
+        const id = document.getElementById('search').value;
+        const errorMessage = document.getElementById('error');
+
+        if (isNaN(id)) {
+            errorMessage.innerText = 'Please enter a valid ID';
+        } else {
+            errorMessage.innerText = '';
+            fetch(`/api/vehicles/${Number(id)}/value`)
+            .then((response) => response.json())
+            .then((data) => {
+                document.getElementById('value').innerText = `R${data.vehicle.Value}`;
+            });
+        }
+    }
+</script>

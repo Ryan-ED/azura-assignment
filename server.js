@@ -36,6 +36,7 @@ app.use((req, res, next) => {
 });
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // app.get('/', (req, res) => {
 //     res.render('index', {
@@ -68,6 +69,13 @@ app.get(['/', '/vehicles'], (req, res) => {
   });
 });
 
+app.get('/vehicles/new', (req, res) => {
+  res.render('add-vehicle', {
+    title: 'Azura Assignment',
+    pageHeader: 'Add new vehicle',
+  });
+});
+
 app.get('/vehicles/:id', (req, res) => {
   const id = Number(req.params.id);
   let vehicle;
@@ -97,18 +105,17 @@ app.post('/vehicles', (req, res) => {
   const {
     make, model, mileage, colour, location, value,
   } = req.body;
+
   connection.query(
     'INSERT INTO Vehicle (Make, Model, Mileage, Colour, Location, `Value`) VALUES(?, ?, ?, ?, ?, ?)',
     [make, model, mileage, colour, location, value],
     (error, results) => {
       if (error) {
         console.log('Error getting data', error);
+        return;
       }
 
-      res.status(201).json({
-        id: results.insertId,
-        message: 'Vehicle captured successfully',
-      });
+      res.redirect(`vehicles/${results.insertId}`);
     },
   );
 });

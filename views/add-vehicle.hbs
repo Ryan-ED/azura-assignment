@@ -1,12 +1,43 @@
+<h1>{{pageHeader}}</h1>
 <h3>Enter vehicle details:</h3>
-<form action="/vehicles" method="post">
-  <input type="text" name="make" placeholder="Make">
-  <input type="text" name="model" placeholder="Model">
-  <input type="text" name="mileage" placeholder="Mileage">
-  <input type="text" name="colour" placeholder="Colour">
-  <input type="text" name="location" placeholder="Location">
-  <input type="text" name="value" placeholder="Value">
 
-  <input type="submit" value="Save">
+<form action="/vehicles" method="post">
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="make" class="form-label">Make</label>
+    <div class="col-sm-4">
+      <input id="make" class="form-control" type="text" name="make" required>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="model" class="form-label">Model</label>
+    <div class="col-sm-4">
+      <input id="model" class="form-control" type="text" name="model" required>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="mileage" class="form-label">Mileage</label>
+    <div class="col-sm-4">
+      <input id="mileage" class="form-control" type="number" name="mileage" required>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="colour" class="form-label">Colour</label>
+    <div class="col-sm-4">
+      <input id="colour" class="form-control" type="text" name="colour" required>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="location" class="form-label">Location</label>
+    <div class="col-sm-4">
+      <input id="location" class="form-control" type="text" name="location" required>
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label class="col-sm-2 col-form-label" for="value" class="form-label">Value</label>
+    <div class="col-sm-4">
+      <input id="value" class="form-control" type="number" name="value" required>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+  <a class="btn btn-secondary" href="/vehicles">View Vehicles</a>
 </form>
-<a href="/vehicles">View All Vehicles</a>

@@ -1,30 +1,66 @@
 <h1>{{pageHeader}}</h1>
+
+<div class="row">
+    <div class="col-sm-2">
+        <input class="form-control" type="number" name="search" id="search" placeholder="Vehicle ID">
+        <span id="error"></span>
+        <span id="value"></span>
+    </div>
+    <div class="col-sm-2">
+        <button class="btn btn-secondary" onclick="showValue()">View Value</button>
+    </div>
+</div>
+<a class="btn btn-primary mt-3 mb-2" href="/vehicles/new">Add New Vehicle</a>
+
 <h2>Vehicles:</h2>
-<input type="text" name="search" id="search" placeholder="Vehicle ID">
-<button onclick="showValue()">View</button>
-<span id="error"></span>
-<p id="value"></p>
-<ul>
-    {{#each vehicles}}
-        <li><a href="/vehicles/{{this.Id}}">{{this.Make}} - {{this.Model}}</a></li>
-    {{/each}}
-</ul>
-<a href="/vehicles/new">Add New Vehicle</a>
+
+<table class="table table table-hover mb-5">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Make</th>
+            <th scope="col">Model</th>
+            <th scope="col">Mileage</th>
+            <th scope="col">Colour</th>
+            <th scope="col">Location</th>
+            <th scope="col">Value</th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody class="table-group-divider">
+        {{#each vehicles}}
+        <tr>
+            <th scope="row">{{this.Id}}</th>
+            <td>{{this.Make}}</td>
+            <td>{{this.Model}}</td>
+            <td>{{this.Mileage}} KMs</td>
+            <td>{{this.Colour}}</td>
+            <td>{{this.Location}}</td>
+            <td>R{{this.Value}}</td>
+            <td><a href="/vehicles/{{this.Id}}" class="btn btn-success">View</a></td>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
 
 <script>
     function showValue() {
         const id = document.getElementById('search').value;
         const errorMessage = document.getElementById('error');
+        const vehicleValue = document.getElementById('value');
+        errorMessage.value = '';
+        vehicleValue.innerText = '';
 
-        if (isNaN(id)) {
-            errorMessage.innerText = 'Please enter a valid ID';
+        if (!id) {
+            errorMessage.innerText = 'Please enter an ID';
+        } else if (isNaN(id) || id < 1) {
+            errorMessage.innerText = 'Please enter a valid ID. Must be a number greater than 0.';
         } else {
-            errorMessage.innerText = '';
             fetch(`/api/vehicles/${Number(id)}/value`)
-            .then((response) => response.json())
-            .then((data) => {
-                document.getElementById('value').innerText = `R${data.vehicle.Value}`;
-            });
+                .then((response) => response.json())
+                .then((data) => {
+                    vehicleValue.innerText = `R${data.vehicle.Value}`;
+                });
         }
     }
 </script>

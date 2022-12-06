@@ -38,11 +38,11 @@ app.get('/health', (req, res) => {
 app.get(['/', '/vehicles/new'], (req, res) => {
   res.render('add-vehicle', {
     title,
-    pageHeader: 'Add new vehicle',
+    pageHeader: 'Welcome to Ryan\'s assignment for Azura Media Limited',
   });
 });
 
-app.get('vehicles', async (req, res) => {
+app.get('/vehicles', async (req, res) => {
   try {
     const vehicles = await vehicleModel.getVehicles();
 
@@ -109,9 +109,7 @@ app.get('/api/vehicles/:id/mileage', async (req, res) => {
 });
 
 app.get('*', (req, res) => {
-  res.status(404).json({
-    message: 'Not Found',
-  });
+  res.status(404).json({ message: 'Not Found' });
 });
 
 app.listen(PORT, HOST, () => {

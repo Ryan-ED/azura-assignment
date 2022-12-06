@@ -34,25 +34,21 @@ module.exports.getVehicleMileageById = async (id) => new Promise((resolve, rejec
 });
 
 module.exports.addVehicle = async (vehicle) => new Promise((resolve, reject) => {
-  try {
-    const query = 'INSERT INTO Vehicle (Make, Model, Mileage, Colour, Location, `Value`) VALUES(?, ?, ?, ?, ?, ?);';
+  const query = 'INSERT INTO Vehicle (Make, Model, Mileage, Colour, Location, `Value`) VALUES(?, ?, ?, ?, ?, ?);';
 
-    const {
-      make, model, mileage, colour, location, value,
-    } = vehicle;
+  const {
+    make, model, mileage, colour, location, value,
+  } = vehicle;
 
-    db.query(
-      query,
-      [make, model, mileage, colour, location, value],
-      (error, results) => {
-        if (error) {
-          reject(new Error(error));
-        }
+  db.query(
+    query,
+    [make, model, mileage, colour, location, value],
+    (error, results) => {
+      if (error || !results) {
+        reject(new Error(error));
+      }
 
-        resolve(results.insertId);
-      },
-    );
-  } catch (error) {
-    reject(new Error(error));
-  }
+      resolve(results.insertId);
+    },
+  );
 });

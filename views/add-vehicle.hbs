@@ -17,7 +17,7 @@
   <div class="row mb-3">
     <label class="col-sm-2 col-form-label" for="mileage" class="form-label">Mileage</label>
     <div class="col-sm-4">
-      <input id="mileage" class="form-control" type="number" name="mileage" required>
+      <input id="mileage" class="form-control" type="number" name="mileage" min="0" max="2147483647" required>
     </div>
   </div>
   <div class="row mb-3">
@@ -35,13 +35,13 @@
   <div class="row mb-3">
     <label class="col-sm-2 col-form-label" for="value" class="form-label">Value</label>
     <div class="col-sm-4">
-      <input id="value" class="form-control" type="number" name="value" required>
+      <input id="value" class="form-control" type="number" name="value" min="0" max="2147483647" required>
     </div>
   </div>
   <button type="submit" class="btn btn-primary">Save</button>
   <a class="btn btn-secondary" href="/vehicles">View Vehicles</a>
 </form>
-<span id="message"></span>
+<div id="message"></div>
 
 <script>
   const form = document.getElementById('form');
@@ -49,7 +49,7 @@
     e.preventDefault();
     const formProperties = new FormData(e.target);
     const formData = Object.fromEntries(formProperties);
-    
+
     fetch('/api/vehicles', {
       headers: {
         'Accept': 'application/json',
@@ -66,10 +66,16 @@
   })
 
   function onSuccessfulInsert(apiResponse) {
-    const successMessage = apiResponse.message;
     const displayMessage = document.getElementById('message');
-
+    displayMessage.innerHTML = '';
     form.reset();
-    displayMessage.innerText = successMessage;
+
+    const successMessage = apiResponse.message;
+
+    displayMessage.innerHTML = 
+    `
+    <p>${successMessage}</p>
+    <a href='/vehicles/${apiResponse.createdId}'>View new vehicle</a>
+    `;
   }
 </script>

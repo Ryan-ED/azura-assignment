@@ -7,7 +7,7 @@
         <span id="value"></span>
     </div>
     <div class="col-sm-2">
-        <button class="btn btn-secondary" onclick="showValue()">View Value</button>
+        <button class="btn btn-secondary" onclick="showValue()">View Mileage</button>
     </div>
 </div>
 <a class="btn btn-primary mt-3 mb-2" href="/vehicles/new">Add New Vehicle</a>
@@ -48,7 +48,7 @@
         const id = document.getElementById('search').value;
         const errorMessage = document.getElementById('error');
         const vehicleValue = document.getElementById('value');
-        
+
         errorMessage.innerText = '';
         vehicleValue.innerText = '';
 
@@ -57,13 +57,13 @@
         } else if (isNaN(id) || id < 1) {
             errorMessage.innerText = 'Please enter a valid ID. Must be a number greater than 0';
         } else {
-            fetch(`/api/vehicles/${Number(id)}/value`)
-                .then((response) => response.json())
-                .then((data) => {
-                    if (Object.keys(data).length === 0) {
-                        errorMessage.innerText = 'Vehicle not found. Please try another ID';
+            fetch(`/api/vehicles/${Number(id)}/mileage`)
+                .then((res) => res.json())
+                .then((response) => {
+                    if (response.isSuccess) {
+                        vehicleValue.innerText = response.message ? response.message : `${response.mileage}KM`;
                     } else {
-                        vehicleValue.innerText = `R${data.vehicle.Value}`;
+                        errorMessage.innerText = 'Vehicle not found. Please try another ID';
                     }
                 });
         }

@@ -1,7 +1,7 @@
 <h1>{{pageHeader}}</h1>
 <h3>Enter vehicle details:</h3>
 
-<form action="/vehicles" method="post">
+<form id="form">
   <div class="row mb-3">
     <label class="col-sm-2 col-form-label" for="make" class="form-label">Make</label>
     <div class="col-sm-4">
@@ -41,3 +41,35 @@
   <button type="submit" class="btn btn-primary">Save</button>
   <a class="btn btn-secondary" href="/vehicles">View Vehicles</a>
 </form>
+<span id="message"></span>
+
+<script>
+  const form = document.getElementById('form');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const formProperties = new FormData(e.target);
+    const formData = Object.fromEntries(formProperties);
+    
+    fetch('/api/vehicles', {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify(formData)
+    })
+    .then(res => res.json())
+    .then(data => onSuccessfulInsert(data))
+    .catch(error => {
+      console.log(error);
+    });
+  })
+
+  function onSuccessfulInsert(apiResponse) {
+    const successMessage = apiResponse.message;
+    const displayMessage = document.getElementById('message');
+
+    form.reset();
+    displayMessage.innerText = successMessage;
+  }
+</script>

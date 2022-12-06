@@ -1,9 +1,12 @@
 /* eslint-disable no-console */
+/* eslint-disable no-restricted-globals */
 const path = require('path');
 const express = require('express');
 
-const { HOST, PORT } = require('./config/config');
+const { HOST, PORT, title } = require('./config/config');
 const db = require('./config/db');
+
+const vehicleModel = require('./models/vehicle.model');
 
 const app = express();
 
@@ -32,94 +35,77 @@ app.get('/health', (req, res) => {
   });
 });
 
-app.get(['/', '/vehicles'], (req, res) => {
-  const vehicles = [];
-  db.query('SELECT * FROM Vehicle', (error, results) => {
-    if (error) {
-      console.log('Error getting data', error);
-      return;
-    }
-
-    vehicles.push(...results);
-  });
-
-  res.render('index', {
-    title: 'Azura Assignment',
-    pageHeader: 'Welcome to Ryan\'s assignment for Azura Media Limited',
-    vehicles,
-  });
-});
-
-app.get('/vehicles/new', (req, res) => {
+app.get(['/', '/vehicles/new'], (req, res) => {
   res.render('add-vehicle', {
-    title: 'Azura Assignment',
+    title,
     pageHeader: 'Add new vehicle',
   });
 });
 
-app.get('/vehicles/:id', (req, res) => {
-  const id = Number(req.params.id);
-  let vehicle;
-  db.query(
-    'SELECT * FROM Vehicle WHERE Id = ?',
-    [id],
-    (error, results) => {
-      if (error) {
-        console.log('Error getting data', error);
-        return;
-      }
+app.get('vehicles', async (req, res) => {
+  try {
+    const vehicles = await vehicleModel.getVehicles();
 
-      if (results.length > 0) {
-        [vehicle] = results;
-      }
+    res.render('index', {
+      title,
+      pageHeader: 'Welcome to Ryan\'s assignment for Azura Media Limited',
+      vehicles,
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error getting vehicles', error });
+  }
+});
 
+app.get('/vehicles/:id', async (req, res) => {
+  if (isNaN(req.params.id)) {
+    res.status(400).json({ message: 'Invalid ID' });
+  }
+
+  try {
+    const id = Number(req.params.id);
+    const vehicle = await vehicleModel.getVehicleById(id);
+
+    if (vehicle) {
       res.render('view-vehicle', {
-        title: 'Azura Assignment',
+        title,
         pageHeader: 'Viewing vehicle details',
         vehicle,
       });
-    },
-  );
+    } else {
+      res.status(400).json({ message: 'No vehicle found' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: 'Error getting vehicle', error });
+  }
 });
 
-app.post('/vehicles', (req, res) => {
-  const {
-    make, model, mileage, colour, location, value,
-  } = req.body;
-
-  db.query(
-    'INSERT INTO Vehicle (Make, Model, Mileage, Colour, Location, `Value`) VALUES(?, ?, ?, ?, ?, ?)',
-    [make, model, mileage, colour, location, value],
-    (error) => {
-      if (error) {
-        console.log('Error getting data', error);
-        return;
-      }
-
-      res.redirect('vehicles');
-    },
-  );
+app.post('/api/vehicles', async (req, res) => {
+  try {
+    const createdId = await vehicleModel.addVehicle(req.body);
+    res.status(201).json({ message: 'Vehicle captured successfully', createdId });
+  } catch (error) {
+    res.status(500).json({ message: 'Error adding vehicle', error });
+  }
 });
 
-app.get('/api/vehicles/:id/value', (req, res) => {
-  const id = Number(req.params.id);
-  let vehicle;
-  db.query(
-    'SELECT Value FROM Vehicle WHERE Id = ?',
-    [id],
-    (error, results) => {
-      if (error) {
-        console.log('Error getting data', error);
-        return;
-      }
+app.get('/api/vehicles/:id/mileage', async (req, res) => {
+  if (isNaN(req.params.id)) {
+    res.status(400).json({ message: 'Invalid ID' });
+  }
 
-      if (results.length > 0) {
-        [vehicle] = results;
-      }
+  try {
+    const id = Number(req.params.id);
 
-      res.json({ vehicle });
-    },
-  );
+    const mileage = await vehicleModel.getVehicleMileageById(id);
+    if (mileage != null) {
+      res.json({ isSuccess: true, mileage });
+    } else {
+      res.status(404).json({ isSuccess: true, mileage: 0, message: 'No mileage data present for the given ID' });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ isSuccess: false, mileage: 0, message: 'Error getting vehicle data' });
+  }
 });
 
 app.get('*', (req, res) => {

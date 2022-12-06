@@ -1,28 +1,11 @@
 /* eslint-disable no-console */
 const path = require('path');
-const mysql = require('mysql');
 const express = require('express');
 
+const { HOST, PORT } = require('./config/config');
+const db = require('./config/db');
+
 const app = express();
-
-const HOST = 'localhost';
-const PORT = 3000;
-
-const connection = mysql.createConnection({
-  host: HOST,
-  user: 'ryan',
-  password: 'youshouldhireme',
-  database: 'Azura',
-});
-
-connection.connect((error) => {
-  if (error) {
-    console.log('DB connection error', error.stack);
-    return;
-  }
-
-  console.log(`Connected as id: ${connection.threadId}`);
-});
 
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'views'));
@@ -39,14 +22,19 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/health', (req, res) => {
-  res.json({
-    message: 'Server is healthy!',
+  db.connect((error) => {
+    if (error) {
+      console.log(error);
+      res.status(500).json({ message: 'The server or database is down...', error });
+    } else {
+      res.json({ message: 'Server is healthy! Database is up and running!' });
+    }
   });
 });
 
 app.get(['/', '/vehicles'], (req, res) => {
   const vehicles = [];
-  connection.query('SELECT * FROM Vehicle', (error, results) => {
+  db.query('SELECT * FROM Vehicle', (error, results) => {
     if (error) {
       console.log('Error getting data', error);
       return;
@@ -72,7 +60,7 @@ app.get('/vehicles/new', (req, res) => {
 app.get('/vehicles/:id', (req, res) => {
   const id = Number(req.params.id);
   let vehicle;
-  connection.query(
+  db.query(
     'SELECT * FROM Vehicle WHERE Id = ?',
     [id],
     (error, results) => {
@@ -99,7 +87,7 @@ app.post('/vehicles', (req, res) => {
     make, model, mileage, colour, location, value,
   } = req.body;
 
-  connection.query(
+  db.query(
     'INSERT INTO Vehicle (Make, Model, Mileage, Colour, Location, `Value`) VALUES(?, ?, ?, ?, ?, ?)',
     [make, model, mileage, colour, location, value],
     (error) => {
@@ -116,7 +104,7 @@ app.post('/vehicles', (req, res) => {
 app.get('/api/vehicles/:id/value', (req, res) => {
   const id = Number(req.params.id);
   let vehicle;
-  connection.query(
+  db.query(
     'SELECT Value FROM Vehicle WHERE Id = ?',
     [id],
     (error, results) => {

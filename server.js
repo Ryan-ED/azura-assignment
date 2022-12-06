@@ -6,8 +6,8 @@ const express = require('express');
 const { HOST, PORT } = require('./config/config');
 const db = require('./config/db');
 
-const vehicleController = require('./controllers/vehicle.controller');
-const vehicleApiController = require('./controllers/vehicleApi.controller');
+const vehicleRouter = require('./routers/vehicle.router');
+const vehicleApiRouter = require('./routers/vehicleApi.router');
 
 const app = express();
 
@@ -25,13 +25,8 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get('/', vehicleController.addVehicle);
-app.get('/vehicles', vehicleController.getVehicles);
-app.get('/vehicles/new', vehicleController.addVehicle);
-app.get('/vehicles/:id', vehicleController.getVehicleById);
-
-app.post('/api/vehicles', vehicleApiController.addVehicle);
-app.get('/api/vehicles/:id/mileage', vehicleApiController.getVehicleMileageById);
+app.use('/vehicles', vehicleRouter);
+app.use('/api/vehicles', vehicleApiRouter);
 
 app.get('/health', (req, res) => {
   db.connect((error) => {

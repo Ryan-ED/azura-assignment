@@ -2,10 +2,12 @@
 const { title } = require('../config/config');
 const vehicleModel = require('../models/vehicle.model');
 
+const pageHeader = 'Welcome to Ryan\'s assignment for Azura Media Limited';
+
 function addVehicle(req, res) {
   res.render('add-vehicle', {
     title,
-    pageHeader: 'Welcome to Ryan\'s assignment for Azura Media Limited',
+    pageHeader,
   });
 }
 
@@ -15,7 +17,7 @@ async function getVehicles(req, res) {
 
     res.render('index', {
       title,
-      pageHeader: 'Welcome to Ryan\'s assignment for Azura Media Limited',
+      pageHeader,
       vehicles,
     });
   } catch (error) {
@@ -35,7 +37,7 @@ async function getVehicleById(req, res) {
     if (vehicle) {
       res.render('view-vehicle', {
         title,
-        pageHeader: 'Viewing vehicle details',
+        pageHeader,
         vehicle,
       });
     } else {

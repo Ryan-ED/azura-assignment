@@ -19,11 +19,15 @@ app.use((req, res, next) => {
   const startTime = Date.now();
   next();
   const delta = Date.now() - startTime;
-  console.log(`request logged from IP: ${req.ip} for ${req.method}: ${req.url} on ${new Date()} in ${delta}ms`);
+  console.log(`request logged from IP: ${req.ip} for ${req.method}: ${req.baseUrl}${req.url} on ${new Date()} in ${delta}ms`);
 });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.get('/', (req, res) => {
+  res.redirect('/vehicles');
+});
 
 app.use('/vehicles', vehicleRouter);
 app.use('/api/vehicles', vehicleApiRouter);

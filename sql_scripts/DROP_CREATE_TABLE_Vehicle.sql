@@ -11,6 +11,6 @@ CREATE TABLE Vehicle (
     Location TINYTEXT,
     `Value` INT NOT NULL,
     CreatedAt DATETIME DEFAULT NOW(),
-    ManualEntry BIT DEFAULT 1,
+    IsManualEntry BIT DEFAULT 1,
     PRIMARY KEY (Id)
 );

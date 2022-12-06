@@ -38,13 +38,6 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// app.get('/', (req, res) => {
-//     res.render('index', {
-//         title: 'Azura Assignment',
-//         pageHeader: 'Welcome to Ryan\'s assignment for Azura Media Limited'
-//     });
-// });
-
 app.get('/health', (req, res) => {
   res.json({
     message: 'Server is healthy!',
@@ -109,13 +102,13 @@ app.post('/vehicles', (req, res) => {
   connection.query(
     'INSERT INTO Vehicle (Make, Model, Mileage, Colour, Location, `Value`) VALUES(?, ?, ?, ?, ?, ?)',
     [make, model, mileage, colour, location, value],
-    (error, results) => {
+    (error) => {
       if (error) {
         console.log('Error getting data', error);
         return;
       }
 
-      res.redirect(`vehicles/${results.insertId}`);
+      res.redirect('vehicles');
     },
   );
 });

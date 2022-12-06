@@ -25,7 +25,7 @@ BEGIN
       Colour,
       Location,
       `Value`,
-      ManualEntry
+      IsManualEntry
   )
 	VALUES 
 	('BMW', @model, @bmwMileage, 'White', 'CT', @bmwPrice, 0), 

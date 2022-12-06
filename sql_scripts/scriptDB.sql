@@ -14,7 +14,7 @@ CREATE TABLE Vehicle (
     Location TINYTEXT,
     `Value` INT NOT NULL,
     CreatedAt DATETIME DEFAULT NOW(),
-    ManualEntry BIT DEFAULT 1,
+    IsManualEntry BIT DEFAULT 1,
     PRIMARY KEY (Id)
 );
 
@@ -27,9 +27,9 @@ INSERT INTO Vehicle (
     Colour,
     Location,
     `Value`
-) 
-VALUES 
-('Toyota', '2013', 56000, 'Silver', 'Durban', 120000), 
+)
+VALUES
+('Toyota', '2013', 56000, 'Silver', 'Durban', 120000),
 ('Hyundai', '2010', 150000, 'Red', 'PTA', 100000);
 
 DROP PROCEDURE IF EXISTS sp_InsertVehicleBMWAndVolkswagen;
@@ -38,7 +38,7 @@ DELIMITER //
 
 CREATE PROCEDURE sp_InsertVehicleBMWAndVolkswagen()
 BEGIN
-    
+
 	SET @maxMileage = 100000;
 	SET @minMileage = 50000;
 	SET @maxVehicleValue = 150000;
@@ -48,10 +48,9 @@ BEGIN
     SET @volkswagenMileage = (SELECT FLOOR( RAND() * (@maxMileage - @minMileage) + @minMileage));
     SET @bmwPrice = (SELECT FLOOR( RAND() * (@maxVehicleValue - @minVehicleValue) + @minVehicleValue));
     SET @volkswagenPrice = (SELECT FLOOR( RAND() * (@maxVehicleValue - @minVehicleValue) + @minVehicleValue));
-    
-    SET @model = (SELECT IFNULL(MAX(model), 1999) + 1 FROM Vehicle WHERE ManualEntry = 0);
-    
-    
+
+    SET @model = (SELECT IFNULL(MAX(model), 1999) + 1 FROM Vehicle WHERE IsManualEntry = 0);
+
 	INSERT INTO Vehicle (
         Make,
         Model,
@@ -59,10 +58,10 @@ BEGIN
         Colour,
         Location,
         `Value`,
-        ManualEntry
-    ) 
-	VALUES 
-	('BMW', @model, @bmwMileage, 'White', 'CT', @bmwPrice, 0), 
+        IsManualEntry
+    )
+	VALUES
+	('BMW', @model, @bmwMileage, 'White', 'CT', @bmwPrice, 0),
 	('Volkswagen', @model, @volkswagenMileage, 'Black', 'JHB', @volkswagenPrice, 0);
 END //
 

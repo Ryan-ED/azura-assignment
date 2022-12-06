@@ -65,7 +65,8 @@
                     } else {
                         errorMessage.innerText = 'Vehicle not found. Please try another ID';
                     }
-                });
+                })
+                .catch((error) => console.log(error));
         }
     }
 </script>

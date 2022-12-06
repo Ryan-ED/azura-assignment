@@ -48,18 +48,23 @@
         const id = document.getElementById('search').value;
         const errorMessage = document.getElementById('error');
         const vehicleValue = document.getElementById('value');
-        errorMessage.value = '';
+        
+        errorMessage.innerText = '';
         vehicleValue.innerText = '';
 
         if (!id) {
             errorMessage.innerText = 'Please enter an ID';
         } else if (isNaN(id) || id < 1) {
-            errorMessage.innerText = 'Please enter a valid ID. Must be a number greater than 0.';
+            errorMessage.innerText = 'Please enter a valid ID. Must be a number greater than 0';
         } else {
             fetch(`/api/vehicles/${Number(id)}/value`)
                 .then((response) => response.json())
                 .then((data) => {
-                    vehicleValue.innerText = `R${data.vehicle.Value}`;
+                    if (Object.keys(data).length === 0) {
+                        errorMessage.innerText = 'Vehicle not found. Please try another ID';
+                    } else {
+                        vehicleValue.innerText = `R${data.vehicle.Value}`;
+                    }
                 });
         }
     }

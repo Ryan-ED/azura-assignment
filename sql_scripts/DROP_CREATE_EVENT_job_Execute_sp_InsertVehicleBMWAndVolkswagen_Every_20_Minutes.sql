@@ -1,0 +1,7 @@
+SET GLOBAL event_scheduler = ON;
+
+DROP EVENT IF EXISTS job_Execute_sp_InsertVehicleBMWAndVolkswagen_Every_20_Minutes;
+
+CREATE EVENT job_Execute_sp_InsertVehicleBMWAndVolkswagen_Every_20_Minutes
+ON SCHEDULE EVERY 20 MINUTE
+DO CALL sp_InsertVehicleBMWAndVolkswagen;

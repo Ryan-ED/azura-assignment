@@ -21,6 +21,7 @@ async function getVehicles(req, res) {
       vehicles,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error getting vehicles', error });
   }
 }
@@ -44,6 +45,7 @@ async function getVehicleById(req, res) {
       res.status(400).json({ message: 'No vehicle found' });
     }
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error getting vehicle', error });
   }
 }

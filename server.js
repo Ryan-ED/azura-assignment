@@ -33,7 +33,7 @@ app.use('/vehicles', vehicleRouter);
 app.use('/api/vehicles', vehicleApiRouter);
 
 app.get('/health', (req, res) => {
-  db.connect((error) => {
+  db.getConnection((error) => {
     if (error) {
       console.log(error);
       res.status(500).json({ message: 'The server or database is down...', error });

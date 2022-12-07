@@ -4,6 +4,7 @@ module.exports.getVehicles = async () => new Promise((resolve, reject) => {
   const query = 'SELECT * FROM Vehicle';
   db.query(query, (error, results) => {
     if (error) {
+      console.log(error);
       reject(new Error(error));
     }
 
@@ -15,6 +16,7 @@ module.exports.getVehicleById = async (id) => new Promise((resolve, reject) => {
   const query = 'SELECT * FROM Vehicle WHERE Id = ?';
   db.query(query, [id], (error, results) => {
     if (error) {
+      console.log(error);
       reject(new Error(error));
     }
 
@@ -26,6 +28,7 @@ module.exports.getVehicleMileageById = async (id) => new Promise((resolve, rejec
   const query = 'SELECT Mileage FROM Vehicle WHERE Id = ?';
   db.query(query, [id], (error, results) => {
     if (error) {
+      console.log(error);
       reject(new Error(error));
     }
 
@@ -45,6 +48,7 @@ module.exports.addVehicle = async (vehicle) => new Promise((resolve, reject) => 
     [make, model, mileage, colour, location, value],
     (error, results) => {
       if (error || !results) {
+        console.log(error);
         reject(new Error(error));
       }
 

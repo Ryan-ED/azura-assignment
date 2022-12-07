@@ -7,6 +7,7 @@ async function addVehicle(req, res) {
     const createdId = await vehicleModel.addVehicle(req.body);
     res.status(201).json({ message: 'Vehicle captured successfully', createdId });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: 'Error adding vehicle', error });
   }
 }

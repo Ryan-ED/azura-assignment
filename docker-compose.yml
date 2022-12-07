@@ -13,7 +13,7 @@ services:
       - 3306
     environment:
       MYSQL_DATABASE: Azura
-      MYSQL_USER: root
+      MYSQL_USER: azura_team
       MYSQL_PASSWORD: youshouldhireryan
       MYSQL_ROOT_PASSWORD: youshouldhireryan
       SERVICE_TAGS: dev
@@ -32,10 +32,10 @@ services:
   #   expose:
   #     - 3000
   #   environment:
-  #     HOST: 0.0.0.0
+  #     HOST: mysqldb
   #     PORT: 3000
   #     DB_PORT: 3306
-  #     DB_USER: 'root'
+  #     DB_USER: 'azura_team'
   #     DB_PASSWORD: 'youshouldhireryan'
   #     DB_NAME: 'Azura'
   #     SERVICE_TAGS: dev

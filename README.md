@@ -1,5 +1,18 @@
 # Azura Developer Test
 
+## How to run this app
+
+1. Clone this repo
+2. `cd` into the project directory
+3. Assuming you have docker installed, run `docker-compose up -d`
+4. Once the container is up, run `npm i`
+5. After npm is done installing, run `npm run start`
+6. Click on the link in the console or go to `localhost:3000` in your browser
+
+---
+
+## Assignment Details
+
 Please read through in detail. Before beginning the project to ensure that you understand exactly what needs to be done
 
 ## Create a website in NodeJS/HTML consisting of two pages
